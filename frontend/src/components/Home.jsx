@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
-function S() {
-  return (
-    <div></div>
-  )
+function Home() {
+  return <div>Welcome to the Home Page!</div>;
 }
 
-export default S
+export default Home;
