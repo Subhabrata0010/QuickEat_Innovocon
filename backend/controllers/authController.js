@@ -13,13 +13,13 @@ export const googleCallback = (req, res, next) => {
       if (loginErr) {
         return res.redirect("/");
       }
-      res.redirect("http://localhost:5173/dashboard");
+      res.redirect("http://localhost:5173/");
     });
   })(req, res, next);
 };
 
 export const handleCallback = (req, res) => {
-  res.redirect("http://localhost:5173/dashboard");
+  res.redirect("http://localhost:5173/");
 };
 
 export const logout = (req, res) => {
@@ -28,6 +28,6 @@ export const logout = (req, res) => {
       return res.status(500).json({ message: "Logout failed" });
     }
     req.session = null;
-    res.redirect("/");
+    res.json({ message: "Logged out successfully" });
   });
 };
