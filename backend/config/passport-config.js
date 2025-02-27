@@ -1,8 +1,7 @@
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import dotenv from "dotenv";
-import User from "./models/User.js"; // Import User model
-
+import User from "../models/user.model.js";
 dotenv.config();
 
 passport.use(
@@ -22,7 +21,7 @@ passport.use(
             name: profile.displayName,
             email: profile.emails[0].value,
             avatar: profile.photos[0]?.value || "",
-            gender: profile._json.gender || "other",
+            gender: profile._json?.gender || "other",
           });
 
           await user.save();
@@ -48,3 +47,5 @@ passport.deserializeUser(async (id, done) => {
     done(err, null);
   }
 });
+
+export default passport;
