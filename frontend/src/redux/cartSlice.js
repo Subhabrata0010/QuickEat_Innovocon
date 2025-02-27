@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { increaseQuantity } from "./menuSlice"; // Import action to restore menu quantity
+import { increaseQuantity } from "./menuSlice"; // ✅ Import increaseQuantity
 
 const loadCartFromStorage = () => {
   const savedCart = localStorage.getItem("cartItems");
@@ -29,26 +29,26 @@ const cartSlice = createSlice({
       );
       if (itemIndex !== -1) {
         if (state.cartItems[itemIndex].cartQuantity > 1) {
-          state.cartItems[itemIndex].cartQuantity -= 1; // Decrease quantity
+          state.cartItems[itemIndex].cartQuantity -= 1;
         } else {
-          state.cartItems.splice(itemIndex, 1); // Remove item if quantity is 1
+          state.cartItems.splice(itemIndex, 1);
         }
       }
       localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
     },
     removeFromCart: (state, action) => {
-      state.cartItems = state.cartItems.filter(
-        (item) => item.id !== action.payload
-      );
+      const item = state.cartItems.find((item) => item.id === action.payload);
+      if (item) {
+        state.cartItems = state.cartItems.filter(
+          (item) => item.id !== action.payload
+        );
+        increaseQuantity(item.id); // Restore quantity in menu
+      }
       localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
-    },
-    clearCart: (state) => {
-      state.cartItems = [];
-      localStorage.removeItem("cartItems");
     },
   },
 });
 
-export const { addToCart, decreaseCartQuantity, removeFromCart, clearCart } =
+export const { addToCart, decreaseCartQuantity, removeFromCart } =
   cartSlice.actions;
 export default cartSlice.reducer;

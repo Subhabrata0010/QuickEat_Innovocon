@@ -1,15 +1,16 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { decreaseCartQuantity, removeFromCart } from "../redux/cartSlice";
-import { increaseQuantity } from "../redux/menuSlice"; // Import increaseQuantity
+import { increaseQuantity } from "../redux/menuSlice";
 
 const CartPage = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
   const dispatch = useDispatch();
 
-  const totalPrice = cartItems.reduce((total, item) => {
-    return total + item.price * item.cartQuantity;
-  }, 0);
+  const totalPrice = cartItems.reduce(
+    (total, item) => total + item.price * item.cartQuantity,
+    0
+  );
 
   const handleDecreaseQuantity = (item) => {
     dispatch(decreaseCartQuantity(item.id));
@@ -35,14 +36,12 @@ const CartPage = () => {
                 <p className="text-gray-500">Quantity: {item.cartQuantity}</p>
               </div>
               <div className="flex space-x-2">
-                {/* Decrease Quantity Button */}
                 <button
                   onClick={() => handleDecreaseQuantity(item)}
                   className="bg-yellow-500 text-white px-3 py-1 rounded-md hover:bg-yellow-600"
                 >
                   -
                 </button>
-                {/* Remove Item Button (Removes Entire Item) */}
                 <button
                   onClick={() => dispatch(removeFromCart(item.id))}
                   className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
