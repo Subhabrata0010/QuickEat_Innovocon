@@ -4,6 +4,7 @@ import { fetchUser, logout } from "../redux/userSlice";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import logo from "../images/logo.png";
+import CartButton from "./CartButton";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -51,6 +52,9 @@ const Navbar = () => {
           </Link>
           <Link to="/menu" className="text-gray-700 hover:text-blue-500">
             Menu
+          </Link>
+          <Link to="/cart">
+            <CartButton />
           </Link>
         </div>
 
