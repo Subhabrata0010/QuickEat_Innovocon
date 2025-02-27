@@ -2,14 +2,25 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/cartSlice";
 import { reduceQuantity } from "../redux/menuSlice";
+import { sendWebSocketMessage } from "../websocket";
 
 const MenuCard = ({ item }) => {
   const dispatch = useDispatch();
 
   const handleAddToCart = () => {
     if (item.quantity > 0) {
-      dispatch(addToCart(item));
-      dispatch(reduceQuantity(item.id)); // Reduce available quantity in menu
+      // First, add to cart locally
+      dispatch(addToCart({ menuId: item.menuId, ...item }));
+      
+      // Then, reduce quantity locally
+      dispatch(reduceQuantity(item.menuId));
+      
+      // Finally, inform the server about the quantity change
+      sendWebSocketMessage({
+        action: "updateQuantity",
+        menuId: item.menuId,
+        newQuantity: item.quantity - 1
+      });
     } else {
       alert("Out of stock!");
     }
@@ -18,11 +29,11 @@ const MenuCard = ({ item }) => {
   return (
     <div className="relative bg-white bg-opacity-80 backdrop-blur-lg shadow-lg rounded-xl overflow-hidden p-5 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
       <img
-        src={item.imageUrl || "https://via.placeholder.com/150"}
-        alt={item.name}
+        src={item["image-url"] || "https://via.placeholder.com/150"}
+        alt={item.foodName}
         className="w-full h-48 object-cover rounded-md mb-4"
       />
-      <h3 className="text-xl font-semibold text-gray-800">{item.name}</h3>
+      <h3 className="text-xl font-semibold text-gray-800">{item.foodName}</h3>
       <p className="text-gray-600">
         {item.category} - {item.type}
       </p>

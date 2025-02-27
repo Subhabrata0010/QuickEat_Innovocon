@@ -9,6 +9,7 @@ import authRoutes from "../routes/authRoutes.js";
 import connectDB from "../db/db.js";
 // import orderRoutes from "../routes/orderRoutes.js";
 import session from "express-session";
+import groupRoutes from "../routes/groupRoutes.js";
 
 dotenv.config();
 
@@ -38,6 +39,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/auth", authRoutes);
+app.use("/groups", groupRoutes);
 // app.use("/orders", orderRoutes(io));
 
 io.on("connection", (socket) => {
