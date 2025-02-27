@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUser, logout } from "../redux/userSlice";
 import { useNavigate, Link } from "react-router-dom";
@@ -10,6 +10,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user, status } = useSelector((state) => state.auth);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   useEffect(() => {
     dispatch(fetchUser());
@@ -59,24 +60,36 @@ const Navbar = () => {
         </div>
 
         {/* Profile / Auth Buttons */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4 relative">
           {status === "loading" ? (
             <p>Loading...</p>
           ) : user ? (
-            <div className="flex items-center space-x-4">
-              {/* Profile Image */}
+            <div className="relative">
+              {/* Profile Image (Clickable) */}
               <img
                 src={user.avatar || "https://via.placeholder.com/40"}
                 alt="Profile"
-                className="w-10 h-10 rounded-full border object-cover"
+                className="w-10 h-10 rounded-full border object-cover cursor-pointer"
+                onClick={() => setShowTooltip(!showTooltip)}
               />
-              {/* Logout Button */}
-              <button
-                onClick={handleLogout}
-                className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
-              >
-                Logout
-              </button>
+
+              {/* Tooltip (Appears on Click) */}
+              {showTooltip && (
+                <div
+                  className="absolute right-0 mt-2 w-56 bg-white shadow-lg rounded-lg p-3 border border-gray-300"
+                  onMouseLeave={() => setShowTooltip(false)} // Hide when mouse leaves
+                >
+                  <p className="text-gray-800 font-semibold">{user.name}</p>
+                  <p className="text-gray-600 text-sm">{user.email}</p>
+                  <hr className="my-2" />
+                  <button
+                    onClick={handleLogout}
+                    className="w-full bg-red-500 text-white py-1 rounded-lg hover:bg-red-600 transition"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             /* Login Button */

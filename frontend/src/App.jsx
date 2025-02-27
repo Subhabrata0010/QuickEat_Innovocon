@@ -3,16 +3,15 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import MenuPage from "./pages/Menu";
 import CartPage from "./pages/CartPage";
+import Home from "./pages/Home";
+import Footer from "./components/Footer";
 
 function App() {
   return (
     <Router>
       <Navbar />
       <Routes>
-        <Route
-          path="/"
-          element={<h1 className="text-center mt-10">Welcome to QuickEat</h1>}
-        />
+        <Route path="/" element={<Home />} />
         <Route
           path="/signup"
           element={<h1 className="text-center mt-10">Sign Up Page</h1>}
@@ -20,6 +19,7 @@ function App() {
         <Route path="/menu" element={<MenuPage />} />
         <Route path="/cart" element={<CartPage />} />
       </Routes>
+      <Footer />
     </Router>
   );
 }
