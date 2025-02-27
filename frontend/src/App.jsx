@@ -4,6 +4,7 @@ import Navbar from './components/Navbar'
 import Home from './components/Home'
 import Menu from './components/Menu';
 import Login from './components/Login';
+import Wallet from './components/Wallet';
 import './App.css'
 
 function App() {
@@ -22,7 +23,9 @@ function App() {
             }
           />
           <Route path="/Menu" element={<Menu />} />
+          <Route path="/Wallet" element={<Wallet />} />
           <Route path="/Login" element={<Login />} />
+
         </Routes>
       </BrowserRouter>
     </>
