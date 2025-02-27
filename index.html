@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickEat</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Sign-In API -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+
+<body>
+    <div class="nav">
+        <div class="logo">
+            <img src="images/image-removebg-preview.png" alt="Logo" srcset="" width="50%">
+            <!-- Logo -->
+        </div>
+        <div class="mid">
+            <div class="opt"><a href="index.html" rel="noopener noreferrer">Home</a></div>
+            <div class="opt"><a href="wallet.html" rel="noopener noreferrer">Wallet</a></div>
+            <div class="opt"><a href="menu.html" rel="noopener noreferrer">Menu</a></div>
+        </div>
+        <div class="prof">
+            <!-- Login button will be replaced with profile icon after login -->
+            <button type="button" id="login-btn" class="login-btn">Login</button>
+            <div id="profile-container" class="profile-container hidden">
+                <img id="profile-image" class="profile-image" src="" alt="Profile">
+            </div>
+        </div>
+    </div>
+    <div class="main">
+
+        <!-- Google Login Modal with Overlay -->
+        <div id="overlay" class="overlay hidden">
+            <div id="popup" class="popup">
+                <h2>Login</h2>
+                <div id="g_id_onload"
+                    data-client_id="http://249516339678-b8iq9au8ldimf9lg64l99m0bi177bbc2.apps.googleusercontent.com"
+                    data-callback="handleCredentialResponse">
+                </div>
+                <div class="g_id_signin" id="google-signin-button"></div>
+            </div>
+        </div>
+
+        <!--Main Menu-->
+        <div id="items-container" class="items-grid">
+            <!-- Item cards will be dynamically added as per websockets -->
+        </div>
+
+        <!-- Profile Card Popup -->
+        <div id="profile-popup" class="profile-popup hidden">
+            <div class="profile-card">
+                <img id="popup-profile-image" class="profile-pic" src="" alt="Profile Picture">
+                <div class="profile-name" id="popup-profile-name">User Name</div>
+                <div class="profile-email" id="popup-profile-email">user@example.com</div>
+                <button class="close-btn" id="close-profile">Close</button>
+            </div>
+        </div>
+
+    </div>
+    <div class="foot">
+        <div class="sec1">This will be footer sec1</div>
+        <div class="sec2">This will be footer sec2</div>
+    </div>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
