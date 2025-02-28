@@ -10,16 +10,14 @@ import connectDB from "../db/db.js";
 // import orderRoutes from "../routes/orderRoutes.js";
 import session from "express-session";
 import groupRoutes from "../routes/groupRoutes.js";
+import awsServerlessExpress from "aws-serverless-express";
 
 dotenv.config();
 
 connectDB();
 
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: { origin: "http://localhost:5173", credentials: true },
-});
+const server = awsServerlessExpress.createServer(app);
 
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json());
@@ -42,16 +40,9 @@ app.use("/auth", authRoutes);
 app.use("/groups", groupRoutes);
 // app.use("/orders", orderRoutes(io));
 
-io.on("connection", (socket) => {
-  console.log("Client connected:", socket.id);
-
-  socket.on("placeOrder", (order) => {
-    console.log("Order received:", order);
-    io.emit("orderUpdate", order);
-  });
-
-  socket.on("disconnect", () => console.log("Client disconnected"));
-});
-
 const PORT = process.env.PORT || 8000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+export const handler = (event, context) => {
+  return awsServerlessExpress.proxy(server, event, context);
+};
