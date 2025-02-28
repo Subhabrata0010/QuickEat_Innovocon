@@ -108,4 +108,4 @@ We welcome contributions! Please follow these steps:
 ## **📌 License**  
 This project is licensed under the **MIT License**.  
 
-🔗 **[Contributors](https://github.com/Subhabrata0010/QuickEat/graphs/contributors)**
+🔗 **[Contributors](https://github.com/Subhabrata0010/QuickEat_Innovocon/graphs/contributors)**
