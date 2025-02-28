@@ -1,8 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { decreaseCartQuantity, removeFromCart } from "../redux/cartSlice";
-import { increaseQuantity } from "../redux/menuSlice";
-import { sendWebSocketMessage } from "../websocket";
+import { removeFromCart, decreaseCartQuantity, clearCart } from "../redux/cartSlice";
+import axios from "axios";
 
 const CartPage = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
@@ -13,72 +12,92 @@ const CartPage = () => {
     0
   );
 
-  const handleDecreaseQuantity = (item) => {
-    // First update local state
-    dispatch(decreaseCartQuantity(item.menuId));
-    dispatch(increaseQuantity(item.menuId));
-    
-    // Then inform the server about the quantity change
-    sendWebSocketMessage({
-      action: "updateQuantity",
-      menuId: item.menuId,
-      newQuantity: item.quantity + 1 // The server needs the new total quantity
-    });
-  };
+  const handlePlaceOrder = async () => {
+    if (cartItems.length === 0) {
+      alert("Your cart is empty!");
+      return;
+    }
 
-  const handleRemoveFromCart = (item) => {
-    // Calculate the quantity to return to inventory
-    const quantityToReturn = item.cartQuantity;
-    
-    // Update local state
-    dispatch(removeFromCart(item));
-    dispatch(increaseQuantity({ id: item.menuId, quantity: quantityToReturn }));
-    
-    // Inform the server about the quantity change
-    sendWebSocketMessage({
-      action: "updateQuantity",
-      menuId: item.menuId,
-      newQuantity: item.quantity + quantityToReturn // The server needs the new total quantity
-    });
+    try {
+      const orderData = {
+        items: cartItems.map((item) => ({
+          menuId: item.menuId,
+          foodName: item.foodName,
+          quantity: item.cartQuantity,
+          price: item.price,
+        })),
+        totalAmount: totalPrice,
+      };
+
+      const response = await axios.post(API_ORDER_URL, orderData, {
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (response.status === 201) {
+        alert("✅ Order placed successfully!");
+        dispatch(clearCart()); // ✅ Clear cart after successful order
+      } else {
+        alert("❌ Failed to place the order.");
+      }
+    } catch (error) {
+      console.error("❌ Error placing order:", error);
+      alert("❌ Error processing transaction.");
+    }
   };
 
   return (
-    <div className="container mx-auto p-6 min-h-screen">
-      <h1 className="text-3xl font-bold mb-4">Your Cart</h1>
+    <div className="min-h-screen bg-gray-100 p-6">
+      <h2 className="text-3xl font-bold text-center text-blue-600 mb-6">🛒 Your Cart</h2>
 
       {cartItems.length === 0 ? (
-        <p className="text-gray-500">Your cart is empty.</p>
+        <p className="text-center text-gray-500">Your cart is empty.</p>
       ) : (
-        <div className="space-y-4">
-          {cartItems.map((item) => (
-            <div
-              key={item.menuId}
-              className="bg-white shadow-md p-4 rounded-lg flex justify-between items-center"
+        <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-blue-500 text-white">
+                <th className="py-3 px-6 text-left">Food Item</th>
+                <th className="py-3 px-6 text-center">Quantity</th>
+                <th className="py-3 px-6 text-right">Price</th>
+                <th className="py-3 px-6 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cartItems.map((item) => (
+                <tr key={item.menuId} className="border-b">
+                  <td className="py-3 px-6">{item.foodName}</td>
+                  <td className="py-3 px-6 text-center">{item.cartQuantity}</td>
+                  <td className="py-3 px-6 text-right font-bold">₹{item.price}</td>
+                  <td className="py-3 px-6 text-right flex space-x-2">
+                    {/* Decrease Quantity Button */}
+                    <button
+                      onClick={() => dispatch(decreaseCartQuantity(item.menuId))}
+                      className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
+                    >
+                      ➖
+                    </button>
+                    {/* Remove Button */}
+                    <button
+                      onClick={() => dispatch(removeFromCart(item.menuId))}
+                      className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+                    >
+                      ❌
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <div className="mt-6 flex justify-between items-center">
+            <h3 className="text-xl font-bold text-gray-800">Total: ₹{totalPrice}</h3>
+            <button
+              onClick={handlePlaceOrder}
+              className="px-6 py-3 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition shadow-lg"
             >
-              <div>
-                <h3 className="text-lg font-semibold">{item.foodName}</h3>
-                <p className="text-gray-700">₹{item.price}</p>
-                <p className="text-gray-500">Quantity: {item.cartQuantity}</p>
-              </div>
-              <div className="flex space-x-2">
-                <button
-                  onClick={() => handleDecreaseQuantity(item)}
-                  className="bg-yellow-500 text-white px-3 py-1 rounded-md hover:bg-yellow-600"
-                >
-                  -
-                </button>
-                <button
-                  onClick={() => handleRemoveFromCart(item)}
-                  className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
-                >
-                  Remove
-                </button>
-              </div>
-            </div>
-          ))}
-          <h2 className="text-xl font-bold mt-6">
-            Total: ₹{totalPrice.toFixed(2)}
-          </h2>
+              ✅ Place Order
+            </button>
+          </div>
         </div>
       )}
     </div>
