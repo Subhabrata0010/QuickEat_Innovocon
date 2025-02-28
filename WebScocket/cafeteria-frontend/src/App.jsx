@@ -1,5 +1,6 @@
 import { Routes, Route, Link } from "react-router-dom";
 import Menu from "./components/Menu";
+import AdminPanel from "./AdminPanel";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
 
       <Routes>
         <Route path="/menu" element={<Menu />} />
+        <Route path="/AdminPanel" element={<AdminPanel/>} />
         <Route path="/" element={<h1 className="text-2xl">🏠 Welcome to the Cafeteria</h1>} />
       </Routes>
     </div>
