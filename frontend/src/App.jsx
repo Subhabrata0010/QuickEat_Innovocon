@@ -6,6 +6,8 @@ import CartPage from "./pages/CartPage";
 import Home from "./pages/Home";
 import Footer from "./components/Footer";
 import Groups from "./pages/Groups";
+import AdminPanel from "./pages/AdminPanel";
+import Wallet from "./pages/Wallet";
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
         <Route path="/menu" element={<MenuPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/group" element={<Groups/>} />
+        <Route path="/admin" element={<AdminPanel/>} />
+        <Route path="/wallet" element={<Wallet/>} />
       </Routes>
       <Footer />
     </Router>
