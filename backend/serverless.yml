@@ -1,0 +1,21 @@
+service: quickeat-backend
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  environment:
+    MONGO_URI: "your-mongodb-uri"
+    JWT_SECRET: "your-secret-key"
+
+functions:
+  app:
+    handler: index.handler
+    events:
+      - http:
+          path: /{proxy+}
+          method: any
+          cors: true
+
+plugins:
+  - serverless-offline
